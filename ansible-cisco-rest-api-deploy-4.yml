@@ -1,0 +1,40 @@
+---
+- name: ASA Deploy REST API.
+  hosts: all
+  connection: network_cli
+  #connection: local
+  gather_facts: no
+  become_method: enable
+  become: yes
+
+  tasks:
+  - name: ASA Deploy REST API
+    cisco.asa.asa_config:
+      commands:
+       - show run
+       - tftp-server inside 192.168.0.200 asa-restapi-7141-lfbff-k8.SPA
+       - 'copy tftp disk0:'
+#      check_all: True
+#       prompt: 
+#        - 'Address or name of remote host \[192.168.0.200\]?'
+#        - 'Source filename \[asa-restapi-7141-lfbff-k8.SPA\]?'
+#        - 'Destination filename \[asa-restapi-7141-lfbff-k8.SPA\]?'
+#        - 'Address or name of remote host \[192.168.0.200\]?'
+#      answer:
+#       -"\r"
+#       -"\r"
+#       -"\r"
+#       -"\r"
+     
+       #wait_for:
+       # -result[0] contains bytes copied in
+       #- copy tftp://192.168.0.200/asa-restapi-7141-lfbff-k8-1.SPA disk0:/
+       # - "rest-api image disk0:/asa-restapi-7141-lfbff-k8.SPA"
+       # - "rest-api agent"
+       # - "http server enable"
+       # - "http 192.168.0.0 255.255.255.0 inside"
+       # - "show run rest-api"
+       
+  - name: "Debug ASA Command Results"
+    debug: msg="{{cisco.asa.asa_config}}"
+
