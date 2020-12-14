@@ -1,34 +1,20 @@
 ---
-- name: ASA Show Version.
+- name: ASA Deploy REST API.
   hosts: all
-  connection: local
+  connection: network_cli
+  #connection: local
   gather_facts: no
+  become_method: enable
+  become: yes
 
   tasks:
-
-          #  - name: "Show the ASA version"
-          #    asa_command:
-          #      commands:
-          #        - show version
-          #    become:  yes
-          #    register: asacommands
-
-  - name: "ASA Show, ver, ssh, telnet,rest, nat"
-    asa_command:
-      commands: 
-       # - show version
-        - show run ssh
-        - show run telnet
-        - show run http
-        - show run rest-api
-        - show asdm image
-       # - show run nat
-        - show run username
-       # - show nat
-
-    become: true
-    register: asacommands
-
-  - name: "Debug ASA Command Results"
-    debug: msg="{{ asacommands}}"
+  - name: ASA Deploy REST API
+    cisco.asa.asa_config:
+      commands:
+       #- "show run"
+       - "rest-api image disk0:/asa-restapi-7141-lfbff-k8.SPA"
+       - "rest-api agent"
+       - "http server enable"
+       - "http 192.168.0.0 255.255.255.0 inside"
+       #- "show run rest-api"
 
